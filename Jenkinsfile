@@ -12,7 +12,7 @@ pipeline {
 		}
 		stage('Test') {
 			steps {
-                sh './user/bin/phpunit'
+                sh './tests'
             }
 		}
 	}
