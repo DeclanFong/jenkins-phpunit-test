@@ -1,20 +1,27 @@
 pipeline {
-    agent {
-        docker {
-            image 'composer:latest'
-        }
-    }
+    agent any
     stages {
+        stage('Checkout') {
+            steps {
+                git 'https://github.com/DeclanFong/jenkins-phpunit-test.git'
+            }
+        }
         stage('Build') {
             steps {
-                // Install PHP dependencies using Composer
-                sh 'composer install'
+                script {
+                    docker.image('composer:latest').inside {
+                        sh 'composer install'
+                    }
+                }
             }
         }
         stage('Test') {
             steps {
-                // Run PHPUnit tests
-                sh './vendor/bin/phpunit tests'
+                script {
+                    docker.image('php:latest').inside {
+                        sh 'phpunit'
+                    }
+                }
             }
         }
     }
